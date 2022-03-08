@@ -1,15 +1,16 @@
 const { connectDb } = require("./connectDb");
 
-exports.newPlant = (req, res) => {
+exports.addNewPlant = (req, res) => {
   if (
     !req.body.plantName ||
-    req.body.scientificName ||
-    req.body.water ||
-    req.body.sunlight ||
-    req.body.temperature ||
-    req.body.temperature ||
-    req.body.fertilizer ||
-    req.body.humidity
+    !req.body.scientificName ||
+    !req.body.water ||
+    !req.body.sunlight ||
+    !req.body.temperature ||
+    !req.body.fertilizer ||
+    !req.body.medium ||
+    !req.body.humidity ||
+    !req.body.repot
   ) {
     res.status(400).send({
       success: false,
@@ -26,6 +27,8 @@ exports.newPlant = (req, res) => {
     temperature: req.body.temperature,
     medium: req.body.medium,
     fertilizer: req.body.fertilizer,
+    repot: req.body.repot,
+    image: req.body.image,
   };
   const db = connectDb();
   db.collection("plants")
