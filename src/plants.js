@@ -57,3 +57,8 @@ exports.getPlants = (req, res) => {
     })
     .catch((err) => res.status(500).send(err));
 };
+
+exports.getOnePlant = (req, res) => {
+  const db = connectDb();
+  db.collection("plants");
+};
