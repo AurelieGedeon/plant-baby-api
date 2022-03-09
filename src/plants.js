@@ -60,5 +60,13 @@ exports.getPlants = (req, res) => {
 
 exports.getOnePlant = (req, res) => {
   const db = connectDb();
-  db.collection("plants");
+  const { plantId } = req.params;
+  db.collection("plants")
+    .doc(plantId)
+    .get()
+    .then((doc) => {
+      let singlePlant = doc.data();
+      res.status(200).send(singlePlant);
+    })
+    .catch((err) => res.staus(500).send(err));
 };
