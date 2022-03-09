@@ -42,3 +42,18 @@ exports.addNewPlant = (req, res) => {
       })
     );
 };
+
+exports.getPlants = (req, res) => {
+  const db = connectDb();
+  db.collection("plants")
+    .get()
+    .then((snapshot) => {
+      const plantList = snapshot.docs.map((doc) => {
+        let plant = doc.data();
+        plant.id = doc.id;
+        return plant;
+      });
+      res.send(plantList);
+    })
+    .catch((err) => res.status(500).send(err));
+};
