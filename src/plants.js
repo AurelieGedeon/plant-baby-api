@@ -10,7 +10,8 @@ exports.addNewPlant = (req, res) => {
     !req.body.fertilizer ||
     !req.body.medium ||
     !req.body.humidity ||
-    !req.body.repot
+    !req.body.repot ||
+    !req.body.isFavorite
   ) {
     res.status(400).send({
       success: false,
@@ -29,6 +30,7 @@ exports.addNewPlant = (req, res) => {
     fertilizer: req.body.fertilizer,
     repot: req.body.repot,
     image: req.body.image,
+    isFavorite: false,
   };
   const db = connectDb();
   db.collection("plants")
@@ -71,36 +73,12 @@ exports.getOnePlant = (req, res) => {
     .catch((err) => res.staus(500).send(err));
 };
 
-exports.createUser = (req, res) => {
+exports.updateFavorites = (req, res) => {
   const db = connectDb();
-};
-
-exports.getUserFavorites = (req, res) => {
-  const db = connectDb();
-  const { plantId } = req.params;
-  db.collection("favorites")
-    .doc()
-    .get()
-    .then((snapshot) => {
-      const favoritesList = snapshot.docs.map((doc) => {
-        let favorite = doc.data();
-        favorite.id = doc.id;
-        return favorite;
-      });
-    })
-    .catch((err) => res.status(500).send(err));
-};
-
-exports.addToFavorites = (req, res) => {
-  const db = connectDb();
-
-  const favorite = {
-    userId: req.body.userId,
-    plantId: req.body.plantId,
-  };
-
-  db.collection("favorites")
-    .add(favorite)
-    .then(() => res.status(200).send("Added to favorites"))
+  const favorite = req.body.isFavorite;
+  db.collection("plants")
+    .doc(req.params.plantId)
+    .update({ isFavorite: favorite })
+    .then((doc) => res.status(202).send(doc))
     .catch((err) => res.status(500).send(err));
 };
