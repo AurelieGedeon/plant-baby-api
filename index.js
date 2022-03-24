@@ -7,7 +7,12 @@ const {
   updateFavorites,
 } = require("./src/plants");
 
-const { addUser, getUser, updateUser } = require("./src/users");
+const {
+  addUser,
+  getUser,
+  updateUser,
+  getUserFavorites,
+} = require("./src/users");
 
 const PORT = process.env.PORT || 3000;
 
@@ -21,8 +26,10 @@ app.get("/plants/:plantId", getOnePlant);
 app.patch("/plants/:plantId", updateFavorites);
 
 app.post("/users", addUser);
-app.get("users/:userId", getUser);
-app.patch("users/:userId", updateUser);
+app.get("/users/:userId", getUser);
+app.get("/users/:userId/plants", getUserFavorites);
+
+app.patch("/users/:userId", updateUser);
 
 app.listen(PORT, () => {
   console.log(`Listening in on port ${PORT}...`);
